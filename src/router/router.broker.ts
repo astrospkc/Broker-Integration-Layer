@@ -1,4 +1,4 @@
-import { UserMargin } from './../../node_modules/kiteconnect/types/connect.d';
+
 
 import express from 'express';
 import kc from '../connection/connection.zerodha';
