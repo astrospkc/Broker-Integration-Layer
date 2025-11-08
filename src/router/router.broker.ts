@@ -40,7 +40,6 @@ const addBroker = async (req: express.Request, res: express.Response) => {
 
 const zerodhaCallback = async (req: express.Request, res: express.Response) => {
     const { request_token } = req.query
-    console.log("request_token: ", request_token)
     try {
 
         if (!request_token) {
@@ -48,7 +47,7 @@ const zerodhaCallback = async (req: express.Request, res: express.Response) => {
         }
 
         const response = await kc.generateSession(request_token as string, brokerApiSecret)
-        console.log("response:", response)
+
         // store accesstoken in db
         await User.updateOne({ email: response.email }, { $set: { accessToken: response.access_token } })
         const user_data = await User.findOne({ email: response.email })
@@ -61,8 +60,8 @@ const zerodhaCallback = async (req: express.Request, res: express.Response) => {
         return res.send({ "message": "zerodha account linked successfully" })
 
     } catch (error) {
-        console.error("error", error)
-        return res.send("internal error occurred")
+
+        return res.send("internal error occurred during callback")
     }
 }
 
@@ -82,12 +81,9 @@ const getprofile = async (req: express.Request, res: express.Response) => {
             }
         })
         const response = await profilres.data
-        console.log("response", response)
-
         return res.send(response)
 
     } catch (error) {
-        console.error("error", error)
         return res.send("internal error occurred")
     }
 }
@@ -98,7 +94,6 @@ const getBrokerInfo = async (req: express.Request, res: express.Response) => {
         const broker_data = await Broker.findOne({ user_id: id })
         return res.send(broker_data)
     } catch (error) {
-        console.error("error", error)
         return res.send("internal error occurred while fetching broker info")
     }
 }
@@ -113,7 +108,6 @@ const getTradeInfo = async (req: express.Request, res: express.Response) => {
             return res.status(400).send({ "error": "Broker not found or access token is not available" })
         }
         const tradeInfo = await incomingServiceProcess(service, brokerAccessToken)
-        console.log("tradeInfo, ", tradeInfo)
         res.send(tradeInfo)
     } catch (error) {
         res.status(500).send({ "error": error, "message": "Internal error occured while getting trade info" })
