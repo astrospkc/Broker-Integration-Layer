@@ -49,7 +49,7 @@ MONGODB_URI=<your_mongo_uri>
 Make sure TypeScript is set up in your project:
 
 ```bash
-npm install -D typescript ts-node @types/node
+npm install 
 ```
 
 Right now, there is **fake trade api**, to show that how the normalized data will look like (I didn't have trade details so fake trade api from zerodha)
