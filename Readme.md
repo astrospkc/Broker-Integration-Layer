@@ -52,4 +52,9 @@ Make sure TypeScript is set up in your project:
 npm install 
 ```
 
+### To test this code:
+
+when you use **add broker** api , you will get login url , console logged in your terminal , click that url and you will redirected to the zerodha page
+
+------;
 Right now, there is **fake trade api**, to show that how the normalized data will look like (I didn't have trade details so fake trade api from zerodha)
