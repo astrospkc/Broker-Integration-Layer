@@ -49,6 +49,7 @@ MONGODB_URI=<your_mongo_uri>
 Make sure TypeScript is set up in your project:
 
 ```bash
+git clone <url>
 npm install 
 ```
 
