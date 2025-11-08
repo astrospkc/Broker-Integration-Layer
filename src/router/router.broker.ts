@@ -12,19 +12,36 @@ import Broker from '../models/models.broker';
 dotenv.config()
 
 const brokerApiSecret = process.env.ZERODHA_BROKER_SECRET_KEY ?? ""
-const loginZerodha = (req: express.Request, res: express.Response) => {
-    const login = kc.getLoginURL()
-    console.log(login)
-    return res.redirect(login)
 
+const addBroker = async (req: express.Request, res: express.Response) => {
+    try {
+        const { id } = req.user
+        const { serviceType } = req.body
+        await Broker.create({
+            user_id: id,
+            broker_type: serviceType
+        })
+
+        if (serviceType == "zerodha") {
+            const login = kc.getLoginURL()
+            console.log(login)
+            return res.redirect(login)
+        } else {
+            return res.send("invalid service type")
+        }
+
+    } catch (error) {
+        console.error("error", error)
+        return res.send("internal error occurred while adding broker maybe serviceType is not provided")
+    }
 }
+
+
 
 const zerodhaCallback = async (req: express.Request, res: express.Response) => {
     const { request_token } = req.query
     console.log("request_token: ", request_token)
     try {
-
-        // const { id } = req.user
 
         if (!request_token) {
             res.json("no token is provided")
@@ -41,7 +58,7 @@ const zerodhaCallback = async (req: express.Request, res: express.Response) => {
         // updating accesstoken and refreshtoken in broker collection
         await Broker.updateOne({ user_id: user_data._id }, { $set: { broker_accessToken: response.access_token, broker_refreshToken: response.refresh_token } }, { upsert: true })
         kc.setAccessToken(response.access_token)
-        return res.send("zerodha account linked successfully")
+        return res.send({ "message": "zerodha account linked successfully" })
 
     } catch (error) {
         console.error("error", error)
@@ -103,7 +120,8 @@ const getTradeInfo = async (req: express.Request, res: express.Response) => {
     }
 }
 
-router.get("/auth/zerodha", authMiddleware, loginZerodha)
+// router.get("/auth/zerodha", authMiddleware, loginZerodha)
+router.post("/auth/addBroker", authMiddleware, addBroker)
 router.get("/auth/zerodha/callback", zerodhaCallback)
 router.get("/user/profile", authMiddleware, getprofile)
 router.get("/user/trades", authMiddleware, getTradeInfo)
