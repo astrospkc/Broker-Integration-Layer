@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "./models.user";
+
 
 const BrokerSchema = new mongoose.Schema({
     user_id: {

@@ -1,8 +1,8 @@
 import { Trade } from "../types"
 import normalizedZerodhaTradeData from "../normalization/normalization.tradeData"
-import zerodhaTradeInfo from "./zerodhaService"
+import zerodhaTradeInfo from "./adapters.zerodha"
 
-const incomingServiceProcess = async (serviceType: string, accessToken: string) => {
+const newAdapterProcess = async (serviceType: string, accessToken: string) => {
     let data, normalizedData: Trade
     if (serviceType === "zerodha") {
         data = await zerodhaTradeInfo(accessToken)
@@ -12,5 +12,5 @@ const incomingServiceProcess = async (serviceType: string, accessToken: string) 
 
 }
 
-export default incomingServiceProcess
+export default newAdapterProcess
 

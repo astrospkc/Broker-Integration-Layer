@@ -7,8 +7,9 @@ import dotenv from "dotenv"
 import authMiddleware from '../middleware/middleware.auth';
 import User from '../models/models.user';
 import axios from 'axios';
-import incomingServiceProcess from '../services/incomingServiceProcess';
+
 import Broker from '../models/models.broker';
+import newAdapterProcess from '../adapters/newAdapterProcess';
 dotenv.config()
 
 const brokerApiSecret = process.env.ZERODHA_BROKER_SECRET_KEY ?? ""
@@ -107,7 +108,7 @@ const getTradeInfo = async (req: express.Request, res: express.Response) => {
         if (!brokerAccessToken) {
             return res.status(400).send({ "error": "Broker not found or access token is not available" })
         }
-        const tradeInfo = await incomingServiceProcess(service, brokerAccessToken)
+        const tradeInfo = await newAdapterProcess(service, brokerAccessToken)
         res.send(tradeInfo)
     } catch (error) {
         res.status(500).send({ "error": error, "message": "Internal error occured while getting trade info" })
